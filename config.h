@@ -1,8 +1,16 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const unsigned int borderpx  = 1;        /* border pixel of windows */
+static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
+
+/* gaps */
+static const unsigned int gappih    = 10;  /* horizontal inner gap between windows */
+static const unsigned int gappiv    = 10;  /* vertical inner gap between windows */
+static const unsigned int gappoh    = 10;  /* horizontal outer gap between windows and screen edge */
+static const unsigned int gappov    = 10;  /* vertical outer gap between windows and screen edge */
+static const int smartgaps          = 1;   /* 1 means no outer gap when only one window */
+
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = { "JetBrainsMono Nerd Font:size=14" };
@@ -59,12 +67,14 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[]   = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *termcmd[]    = { "kitty", NULL };
-static const char *rofi[]       = { "rofi", "-show", "drun", "-theme", "~/.config/rofi/config.rasi", NULL};
-static const char *fmanager[]   = { "thunar", NULL };
-static const char *browser[]    = { "librewolf", NULL };
-static const char *altBrowser[] = { "brave", NULL };
+static const char *termcmd[]     = { "kitty", NULL };
+static const char *rofi[]        = { "rofi", "-show", "drun", "-theme", "~/.config/rofi/config.rasi", NULL};
+static const char *fmanager[]    = { "thunar", NULL };
+static const char *browser[]     = { "brave", NULL };
+static const char *altBrowser[]  = { "librewolf", NULL };
+static const char *printscrcmd[] = { "flameshot", "gui", NULL };
 
+#include "movestack.c"
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_r,      spawn,          {.v = dmenucmd } },
@@ -73,6 +83,7 @@ static const Key keys[] = {
   { MODKEY,                       XK_b,      spawn,          {.v = browser } },
   { MODKEY|ShiftMask,             XK_b,      spawn,          {.v = altBrowser } },
   { MODKEY,                       XK_e,      spawn,          {.v = fmanager } },
+  { 0,                            XK_Print,  spawn,          {.v = printscrcmd } },
 	{ MODKEY|ShiftMask,             XK_x,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -83,7 +94,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_z,      zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_q,      killclient,     {0} },
-  { MODKEY,                       XK_f,      fullscreen,     {0} },
+  { MODKEY,                       XK_f,      togglefullscr,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_y,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
